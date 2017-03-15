@@ -39,27 +39,27 @@ public class FileCompare {
 	public static final int NO_OF_FILES = 2;
 	public static final String DEFAULT_DELIMITTER = "|";
 
-	private final Set<String> keyColumnNamesSet = new LinkedHashSet<String>();
-	private final Set<String> ignoreColumnNamesSet = new HashSet<String>();
-	private final Map<String, Integer> allColumnNamesFile1Map = new HashMap<String, Integer>();
-	private final Map<Integer, String> allColumnNamesFile1ReverseMap = new HashMap<Integer, String>();
+	private Set<String> keyColumnNamesSet = new LinkedHashSet<String>();
+	private Set<String> ignoreColumnNamesSet = new HashSet<String>();
+	private Map<String, Integer> allColumnNamesFile1Map = new HashMap<String, Integer>();
+	private Map<Integer, String> allColumnNamesFile1ReverseMap = new HashMap<Integer, String>();
 
-	private final Map<String, Integer> allColumnNamesFile2Map = new HashMap<String, Integer>();
-	private final Map<Integer, Integer> file1File2ColumnMapIndex = new HashMap<Integer, Integer>();
+	private Map<String, Integer> allColumnNamesFile2Map = new HashMap<String, Integer>();
+	private Map<Integer, Integer> file1File2ColumnMapIndex = new HashMap<Integer, Integer>();
 
-	private final Map<Integer, String> ignoreColumnNameIndexMap = new HashMap<Integer, String>();
+	private Map<Integer, String> ignoreColumnNameIndexMap = new HashMap<Integer, String>();
 
-	private final FileData file1Data;
-	private final FileData file2Data;
+	private FileData file1Data;
+	private FileData file2Data;
 	private String allColumnNamesFile1 = DEFAULT_ALL_COLUMN_NAME_LIST_FILE1_NAME;
 	private String allColumnNamesFile2 = DEFAULT_ALL_COLUMN_NAME_LIST_FILE2_NAME;
 
 	private String keyColumnNamesFile = DEFAULT_ALL_KEY_COLUMN_NAME_LIST_FILE_NAME;
 	private String ignoreColumnNamesFile = DEFAULT_IGNORE_COLUMN_NAME_LIST_FILE_NAME;
 
-	private final List<RecordComparisonResult> recordComparisonResultList = new ArrayList<RecordComparisonResult>();
+	private List<RecordComparisonResult> recordComparisonResultList = new ArrayList<RecordComparisonResult>();
 
-	private final HashMap<String, Integer> mismatchColumnCountMap = new HashMap<String, Integer>();
+	private HashMap<String, Integer> mismatchColumnCountMap = new HashMap<String, Integer>();
 
 	private String outPutFileName = DEFAULT_OUTPUT_FILE;
 
@@ -248,6 +248,22 @@ public class FileCompare {
 
 		System.out.format("\nTime taken ( in milli secs) : (%d) for writing the (%s) data onto disk  ", diff,
 				outPutFileName);
+
+	}
+
+	public void cleanup() {
+		file1Data = null;
+		file2Data = null;
+		keyColumnNamesSet = null;
+		ignoreColumnNamesSet = null;
+		allColumnNamesFile1Map = null;
+		allColumnNamesFile1ReverseMap = null;
+		allColumnNamesFile2Map = null;
+		file1File2ColumnMapIndex = null;
+		ignoreColumnNameIndexMap = null;
+		recordComparisonResultList = null;
+		mismatchColumnCountMap = null;
+
 	}
 
 	public void generateXlsOutput() throws InterruptedException, ExecutionException, IOException {
@@ -292,6 +308,7 @@ public class FileCompare {
 			System.out.format("\nFile comparison between %s and %s completed.. Starting with %s File generation...",
 					file1Data.getFileName(), file2Data.getFileName(), outPutFileName);
 			generateXlsFile(fileComparisonResult);
+			cleanup();
 		} finally {
 			executorPool.shutdown();
 		}
